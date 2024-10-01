@@ -1,0 +1,33 @@
+name: AWS S3 List Buckets
+
+on:
+  push:
+    branches:
+      - main  # Run the workflow on push to the main branch
+
+jobs:
+  aws-s3-list:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code (required to use actions)
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Set the AWS region
+
+      # Step 3: Install AWS CLI (in case it's not installed)
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      # Step 4: List S3 Buckets
+      - name: List S3 Buckets
+        run: aws s3 ls
